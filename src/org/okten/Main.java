@@ -1,82 +1,69 @@
 package org.okten;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.ArrayList;
 
 public class Main {
 
+    static {
+        System.out.println("Main class");
+    }
+
+    public static final Double PI = 3.14159;
+
     public static void main(String[] args) {
-        System.out.println("Hello okten");
+        System.out.println("Starting application...");
 
-        var variable = "test"; // after Compilation -> String variable - NOT dynamic
-//        variable = "test2"; // valid
-//        variable = 1; // not valid
-//        variable = false; // not valid
-//        variable = <ONLY STRING>; // not valid
+        Driver john = new Driver("John", "J123");
+        Driver mike = new Driver("Mike", "M123");
 
-        String text = "lorem ipsum";
-        String newText = new String("lorem ipsum");
-        String oldText = "lorem ipsum";
+        System.out.println("Created cars: " + Car.CREATED_CAR_COUNT);
 
-        System.out.println(text.equals(newText)); // true
-        System.out.println(text == newText); // false
-        System.out.println(text == oldText); // true
+        Car tesla = new Car("Tesla", "EV", john);
+        Car audi = new Car("Audi", "V8", mike);
 
-        boolean bool = true; // false
+        tesla.setCarType(CarType.SUV);
 
-        byte b = 127; // -128 - 127
-        short s = 32767; // 2 ^ 15 - 1
-        int i = 2_000_000_000; // 2 ^ 31 - 1
-        long l = 200043343434L; // 2 ^ 63 - 1
+        System.out.println("Created cars: " + Car.CREATED_CAR_COUNT);
 
-        double d = 2.32; // 2.32
-        BigDecimal bd = new BigDecimal("2.32");
-        BigInteger bi = new BigInteger("32");
+        Car.printInfo();
 
-        float f = 3.14F;
+        System.out.println(tesla);
+        System.out.println(audi);
 
-        char c = 83;
+        tesla.setDriver(mike);
+        audi.setDriver(john);
 
-        System.out.println(c);
+        System.out.println(tesla);
+        System.out.println(audi);
 
-        Test.printHello();
-//        PrivatePrint.printHello(); - private modifier
-//        PackagePrivatePrint.printHello(); - no access modifier == package private
+        Driver bob = new ProficientDriver("Bob", "B777", new BigDecimal("100.00"));
+        audi.setDriver(bob);
 
-        // private - only in class
-        // protected - inside class and descendants
-        // <no modifier> (Test.printHello) - inside class and same package classes - package-private
-        // public - everywhere
+        System.out.println(audi);
 
-        Product laptop = new Product("Ноутбук", new BigDecimal("20000"));
-        System.out.println(laptop.getName());
-        System.out.println(laptop.getPrice());
-        laptop.setPrice(new BigDecimal("15000"));
-        System.out.println(laptop.getPrice());
-        System.out.println("Quantity: " + laptop.getQuantity()); // 0
-        System.out.println("Description: " + laptop.getDescription()); // null
+        john.printWelcomeMessage();
+        mike.printWelcomeMessage();
+        bob.printWelcomeMessage();
 
-        var pencil = new Product("Олівець", new BigDecimal("10"));
-        pencil.addReview("Хороший олівець");
-        pencil.addReview("Поганий олівець");
-        System.out.println(pencil.getReviews());
+        john.printLicenseNumber();
+        mike.printLicenseNumber();
+        bob.printLicenseNumber();
 
-        for (int index = 0; index < pencil.getReviews().size(); index++) {
-            System.out.println(pencil.getReviews().get(index));
+        audi.setCarType(CarType.SUV);
+
+        ArrayList<Car> cars = new ArrayList<>();
+        cars.add(tesla);
+        cars.add(audi);
+
+        for (Car car : cars) {
+            if (car.getCarType() == CarType.SUV) {
+                System.out.println(car.getMake() + " is SUV");
+            }
         }
+    }
 
-        for (String review : pencil.getReviews()) {
-            System.out.println(review);
-        }
-
-        int index = 0;
-        while (index < pencil.getReviews().size()) {
-            System.out.println(pencil.getReviews().get(index));
-            index++; // === < index = index + 1; >
-        }
-
-        if (pencil.getReviews().size() > 0) {
-            System.out.println("Олівець має відгуки");
-        }
+    private void print() {
+        System.out.println("hello");
     }
 }
