@@ -1,5 +1,11 @@
 package org.okten;
 
+import org.okten.interfaces.Circle;
+import org.okten.interfaces.Rectangle;
+import org.okten.interfaces.Square;
+import org.okten.passenger.Animal;
+import org.okten.passenger.Person;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -19,8 +25,10 @@ public class Main {
 
         System.out.println("Created cars: " + Car.CREATED_CAR_COUNT);
 
-        Car tesla = new Car("Tesla", "EV", john);
-        Car audi = new Car("Audi", "V8", mike);
+        Car<Rectangle> tesla = new Car<>("Tesla", "EV", john);
+        Car<Circle> audi = new Car<>("Audi", "V8", mike);
+
+        Car<Square> truck = new Car<>("MAN", "SUPER ENGINE 123", john);
 
         tesla.setCarType(CarType.SUV);
 

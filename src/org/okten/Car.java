@@ -1,9 +1,10 @@
 package org.okten;
 
 import lombok.Data;
+import org.okten.interfaces.Shape;
 
 @Data
-public class Car {
+public class Car<T extends Shape> {
 
     public static int CREATED_CAR_COUNT = 0;
 
@@ -19,11 +20,15 @@ public class Car {
 
     private CarType carType;
 
+    private T passenger;
+
     public Car(String make, String engineModel, Driver driver) {
         this.make = make;
         this.engine = new Engine(engineModel);
         this.driver = driver;
         CREATED_CAR_COUNT++;
+
+        passenger.printArea();
     }
 
     public static void printInfo() {
