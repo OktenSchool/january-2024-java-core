@@ -1,77 +1,86 @@
 package org.okten;
 
-import org.okten.interfaces.Circle;
-import org.okten.interfaces.Rectangle;
-import org.okten.interfaces.Square;
-import org.okten.passenger.Animal;
-import org.okten.passenger.Person;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Main {
 
-    static {
-        System.out.println("Main class");
-    }
-
-    public static final Double PI = 3.14159;
+    // FIFO - First in first out
+    // LIFO - Last in first out (Stack)
 
     public static void main(String[] args) {
-        System.out.println("Starting application...");
+        List<String> messages = new ArrayList<>();
+        messages.add("hello");
+        messages.add("world");
+        messages.add("and");
+        messages.add("okten");
+        messages.add("okten");
+        messages.add("hello");
+        messages.add(null);
+        messages.add(null);
 
-        Driver john = new Driver("John", "J123");
-        Driver mike = new Driver("Mike", "M123");
+        System.out.println(messages);
 
-        System.out.println("Created cars: " + Car.CREATED_CAR_COUNT);
+        Set<String> messages2 = new HashSet<>();
+        messages2.add("hello");
+        messages2.add("world");
+        messages2.add("and");
+        messages2.add("okten");
+        messages2.add("okten");
+        messages2.add("hello");
+        messages2.add(null);
+        messages2.add(null);
 
-        Car<Rectangle> tesla = new Car<>("Tesla", "EV", john);
-        Car<Circle> audi = new Car<>("Audi", "V8", mike);
+        System.out.println(messages2);
 
-        Car<Square> truck = new Car<>("MAN", "SUPER ENGINE 123", john);
+        System.out.println("------------------------------------");
+        System.out.println(addElements(new ArrayList<>()));
+        System.out.println(addElements(new TreeSet<>(Comparator.nullsFirst(Comparator.reverseOrder()))));
 
-        tesla.setCarType(CarType.SUV);
+        System.out.println("------------------------------------");
+        Map<String, Integer> map = new TreeMap<>();
+        map.put("c", 4);
+        map.put("a", 1);
+        map.put("b", 5);
+        System.out.println(map);
 
-        System.out.println("Created cars: " + Car.CREATED_CAR_COUNT);
+        Person person1 = new Person("John", 20);
+        Person person2 = new Person("Mike", 30);
+        Person person3 = new Person("Bob", 13);
+        Person person4 = new Person("John", 90);
+        System.out.println(person1.hashCode() % 32);
+        System.out.println(person2.hashCode() % 32);
+        System.out.println(person3.hashCode() % 32);
 
-        Car.printInfo();
+        Map<Person, String> persons = new HashMap<>(32);
+        persons.put(person1, "Lviv");
+        persons.put(person2, "Kyiv");
+        persons.put(person3, "Dnipro");
+        persons.put(person4, "Dnipro");
+        System.out.println(persons);
+        System.out.println(person1 == person4);
+        System.out.println(person1.equals(person4));
 
-        System.out.println(tesla);
-        System.out.println(audi);
-
-        tesla.setDriver(mike);
-        audi.setDriver(john);
-
-        System.out.println(tesla);
-        System.out.println(audi);
-
-        Driver bob = new ProficientDriver("Bob", "B777", new BigDecimal("100.00"));
-        audi.setDriver(bob);
-
-        System.out.println(audi);
-
-        john.printWelcomeMessage();
-        mike.printWelcomeMessage();
-        bob.printWelcomeMessage();
-
-        john.printLicenseNumber();
-        mike.printLicenseNumber();
-        bob.printLicenseNumber();
-
-        audi.setCarType(CarType.SUV);
-
-        ArrayList<Car> cars = new ArrayList<>();
-        cars.add(tesla);
-        cars.add(audi);
-
-        for (Car car : cars) {
-            if (car.getCarType() == CarType.SUV) {
-                System.out.println(car.getMake() + " is SUV");
-            }
-        }
+        // 16 - index=0-15
     }
 
-    private void print() {
-        System.out.println("hello");
+    public static Collection<String> addElements(Collection<String> target) {
+        target.add("e");
+        target.add("a");
+        target.add("g");
+        target.add("d");
+        target.add("b");
+        target.add("c");
+        target.add(null);
+        return target;
     }
 }
