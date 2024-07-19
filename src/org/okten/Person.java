@@ -1,28 +1,22 @@
 package org.okten;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.util.Objects;
 
 @Data
-public class Person extends Object {
+@Builder
+// Immutable
+public class Person {
 
     private final String name;
 
     private final Integer age;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(name, person.name) && Objects.equals(age, person.age);
-    }
+    private final String company;
 
-    // Integer.MIN_VALUE - Integer.MAX_VALUE
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, age);
-    }
+    private final double salary;
+
+    private final String phoneNumber;
+
+    private final String homeAddress;
 }
