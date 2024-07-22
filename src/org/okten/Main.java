@@ -1,130 +1,100 @@
 package org.okten;
 
+import lombok.SneakyThrows;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.Comparator.reverseOrder;
 
 public class Main {
 
+    public static final String CONSTANT = "Constant";
+
     public static void main(String[] args) {
-        Person john = new Person("John", 25, "Okten", 5000, "3712693128973", "Lviv, Gorodotska 5432433");
-        Person mike = Person.builder()
-                .name("Mike")
-                .age(30)
-                .build();
-        Person bob = Person.builder()
-                .name("Bob")
-                .age(25)
-                .build();
-        Person hugo = Person.builder()
-                .name("Hugo")
-                .age(13)
-                .build();
+        writeWords(List.of("Jameson", "Bob", "Martin", "lkasjdjalksd"), "resources/words.txt");
+        List<String> words = readWords("resources/words.txt");
 
-        List<Person> persons = List.of(john, mike, bob, hugo);
+        long count = getWordsWithLengthGreaterThan5(words);
+        System.out.println(count);
+    }
 
-        // List<Ящик>
-        // Ящик - List<Овоч>
+    @SneakyThrows
+    public static List<String> readWords(String filePath) {
+        Path path = Paths.get(filePath);
+        return Files.readAllLines(path);
+    }
 
-        List<Character> personNameUniqueCharacters = persons
+    @SneakyThrows
+    public static void writeWords(List<String> words, String filePath) {
+        Path path = Paths.get(filePath);
+        Files.write(path, words, StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+    }
+
+    public static long getWordsWithLengthGreaterThan5(List<String> words) {
+        if (words == null) {
+            throw new IllegalArgumentException("Words can not be null");
+        }
+
+        return words
                 .stream()
-                .map(Person::getName)
-                .flatMap(personName -> personName
-                        .chars()
-                        .mapToObj(charIndex -> (char) charIndex)
-                )
-                .distinct()
-                .toList();
-
-        if (persons.stream().allMatch(person -> person.getAge() > 18)) {
-            System.out.println("Усі персони є повнолітніми");
-        } else {
-            System.out.println("Не усі персони є повнолітніми");
-        }
-
-        System.out.println(personNameUniqueCharacters);
-
-        System.out.println(john);
-        System.out.println(mike);
-
-        List<Integer> numbers = List.of(2, 8, 1, 4, 9, 4, 0, 6, 5, 3, 5, 2, 8, 4, 0);
-
-        demo1(numbers);
-        demo2(numbers);
-        demo3(numbers);
+                .map(String::length)
+                .filter(wordLength -> wordLength > 5)
+                .count();
     }
 
-    public static void demo1(List<Integer> numbers) {
-        List<Integer> evenNumbers = new ArrayList<>();
-
-        for (Integer number : numbers) {
-            if (number % 2 == 0 && !evenNumbers.contains(number)) {
-                evenNumbers.add(number);
-            }
+    public static void finallyDemo() {
+        try {
+            getWordsWithLengthGreaterThan5(null);
+            System.out.println("Unreachable line");
+        } finally {
+            System.out.println("Code from finally block");
         }
-
-        evenNumbers.sort(reverseOrder());
-
-        List<Integer> squares = new ArrayList<>();
-
-        for (Integer number : evenNumbers) {
-            squares.add(number * number);
-        }
-
-        System.out.println(squares);
     }
 
-    public static void demo2(List<Integer> numbers) {
-        Set<Integer> evenNumbers = new TreeSet<>(reverseOrder());
+    public static void fileOldApproachDemo() {
+        // Input/Output Stream
 
-        for (Integer number : numbers) {
-            if (number % 2 == 0) {
-                evenNumbers.add(number);
-            }
+        List<String> words = new ArrayList<>();
+
+        File file = new File("resources/test.txt");
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             DataInputStream dataInputStream = new DataInputStream(fileInputStream)) {
+            byte[] bytes = fileInputStream.readAllBytes();
+            String fileContent = new String(bytes);
+            words = Arrays.stream(fileContent.split("\n")).toList();
+
+            System.out.println("Data from file: " + words);
+        } catch (FileNotFoundException e) {
+            System.out.println("File with words not found");
+        } catch (IOException e) {
+            System.out.println("Unable to read file with words");
+        } finally {
+            System.out.println("I am executing always *");
         }
 
-        List<Integer> squares = new ArrayList<>();
-
-        for (Integer number : evenNumbers) {
-            squares.add(number * number);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file, true)) {
+            fileOutputStream.write("test content from our program\n".getBytes());
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Unable to write to the file");
         }
 
-        System.out.println(squares);
-    }
-
-    public static void demo3(List<Integer> numbers) {
-        int maxEvenSquare = numbers
-                .stream()
-                .filter(n -> n % 2 == 0)
-                .distinct()
-                .sorted(reverseOrder())
-                .mapToInt(Main::square)
-                .max()
-                .orElse(0);
-
-        System.out.println("max even square: " + maxEvenSquare);
-
-        List<Integer> squares = numbers
-                .stream()
-                .filter(n -> n % 2 == 0)
-                .distinct()
-                .sorted(reverseOrder())
-                .map(Main::square)
-                .collect(Collectors.toList());// == .toList()
-
-        System.out.println(squares);
-    }
-
-    private static Integer square(Integer n) {
-        return n * n;
+        try {
+            long result = getWordsWithLengthGreaterThan5(words);
+            System.out.println(result);
+        } catch (Exception e) {
+            System.out.println("Unable to count words (got exception)");
+        }
     }
 }
